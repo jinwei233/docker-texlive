@@ -30,6 +30,8 @@ RUN export LANG=C.UTF-8 &&\
                           ttf-wqy-zenhei \                          
                           xfonts-intl-chinese \
                           xfonts-intl-chinese-big &&\
+# install imagemagick
+    apt-get install --no-install-recommends -y imagemagick libmagickwand-dev &&\
 # install TeX Live and ghostscript
     apt-get install -f -y ghostscript=9.18* \
                           make=4.1* \
