@@ -11,16 +11,42 @@
 FROM ubuntu:16.04
 MAINTAINER Thomas Weise <tweise@ustc.edu.cn>
 
+# 国内 ubuntu 镜像
+RUN echo '\n\
+deb http://mirrors.aliyun.com/ubuntu/ xenial main restricted\n\
+deb http://mirrors.aliyun.com/ubuntu/ xenial-security main restricted\n\
+deb http://mirrors.aliyun.com/ubuntu/ xenial-security universe\n\
+deb http://mirrors.aliyun.com/ubuntu/ xenial-security multiverse\n\
+deb http://mirrors.aliyun.com/ubuntu/ xenial-updates main restricted\n\
+deb http://mirrors.aliyun.com/ubuntu/ xenial-updates universe\n\
+deb http://mirrors.aliyun.com/ubuntu/ xenial-updates multiverse\n\
+deb http://mirrors.aliyun.com/ubuntu/ xenial universe\n\
+deb http://mirrors.aliyun.com/ubuntu/ xenial multiverse\n\
+deb http://mirrors.aliyun.com/ubuntu/ xenial-backports main restricted universe multiverse\n\
+deb http://archive.canonical.com/ubuntu xenial partner\n\
+deb-src http://archive.ubuntu.com/ubuntu xenial main restricted\n\
+deb-src http://mirrors.aliyun.com/ubuntu/ xenial main restricted multiverse universe\n\
+deb-src http://mirrors.aliyun.com/ubuntu/ xenial-updates main restricted multiverse universe\n\
+deb-src http://mirrors.aliyun.com/ubuntu/ xenial-backports main restricted universe multiverse\n\
+deb-src http://archive.canonical.com/ubuntu xenial partner\n\
+deb-src http://mirrors.aliyun.com/ubuntu/ xenial-security main restricted multiverse universe\n'\
+> /etc/apt/sources.list
+
+# 环境配置，源更新
 RUN export LANG=C.UTF-8 &&\
     apt-get clean &&\
     apt-get update &&\
     apt-get autoclean -y &&\
     apt-get autoremove -y &&\
     apt-get update &&\
-# install utilities
-    apt-get install -f -y apt-utils &&\
-# install some nice chinese fonts
-    apt-get install -f -y fonts-arphic-bkai00mp \
+    apt-get install -f -y apt-utils 
+
+# install imagemagick
+# apt-get install --no-install-recommends -y imagemagick libmagickwand-dev
+RUN apt-get install -y imagemagick
+
+# install texlive
+RUN apt-get install -f -y fonts-arphic-bkai00mp \
                           fonts-arphic-bsmi00lp \
                           fonts-arphic-gbsn00lp \
                           fonts-arphic-gkai00mp \
@@ -30,8 +56,6 @@ RUN export LANG=C.UTF-8 &&\
                           ttf-wqy-zenhei \                          
                           xfonts-intl-chinese \
                           xfonts-intl-chinese-big &&\
-# install imagemagick
-    apt-get install --no-install-recommends -y imagemagick libmagickwand-dev &&\
 # install TeX Live and ghostscript
     apt-get install -f -y ghostscript=9.18* \
                           make=4.1* \
@@ -60,9 +84,10 @@ RUN export LANG=C.UTF-8 &&\
                         texlive-science-doc &&\
 # ensure that external fonts and doc folders exists
     mkdir /usr/share/fonts/external/ &&\
-    mkdir /doc/ &&\
+    mkdir /doc/
+
 # clean up all temporary files 
-    apt-get clean &&\
+RUN apt-get clean &&\
     apt-get autoclean -y &&\
     apt-get autoremove -y &&\
     apt-get clean &&\
@@ -70,8 +95,14 @@ RUN export LANG=C.UTF-8 &&\
     rm -rf /var/lib/apt/lists/* &&\    
     rm -f /etc/ssh/ssh_host_*
     
+# 容器运行时应该尽量保持容器存储层不发生写操作，对于数据库类需要保存动态数据的应
+# 用，其数据库文件应该保存于卷(volume)中
 VOLUME ["/doc/", "/usr/share/fonts/external/"]
 
+# 一些 latex shell 脚本
 ADD scripts /bin/
+
+# 添加 app 目录到 node 项目下
+# ADD app /node/
 
 ENTRYPOINT ["/bin/__boot__.sh"]

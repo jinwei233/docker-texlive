@@ -16,7 +16,7 @@ post=${2:-}
 echo "The current directory is '$__tex__currentDir' and the folder where we look for scripts is '$scriptDir'."
 echo "We will now invoke the 'tex.sh' tool chain."
 
-"$scriptDir/tex.sh" "${__tex__document}" pdflatex -halt-on-error -interaction=nonstopmode
+"$scriptDir/tex.sh" "${__tex__document}" pdflatex --shell-escape -halt-on-error -interaction=nonstopmode
 
 if [[ -n "$post" ]]
 then
