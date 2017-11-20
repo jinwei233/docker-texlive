@@ -30,7 +30,7 @@ deb-src http://mirrors.aliyun.com/ubuntu/ xenial-updates main restricted multive
 deb-src http://mirrors.aliyun.com/ubuntu/ xenial-backports main restricted universe multiverse\n\
 deb-src http://archive.canonical.com/ubuntu xenial partner\n\
 deb-src http://mirrors.aliyun.com/ubuntu/ xenial-security main restricted multiverse universe\n'\
-> /etc/apt/sources.list
+>> /etc/apt/sources.list
 
 # 环境配置，源更新
 RUN export LANG=C.UTF-8 &&\
@@ -85,6 +85,8 @@ RUN apt-get install -f -y fonts-arphic-bkai00mp \
 # ensure that external fonts and doc folders exists
     mkdir /usr/share/fonts/external/ &&\
     mkdir /doc/
+
+RUN apt-get install -y emacs
 
 # clean up all temporary files 
 RUN apt-get clean &&\
