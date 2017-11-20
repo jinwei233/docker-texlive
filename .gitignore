@@ -23,3 +23,6 @@ hs_err_pid*
 /out
 /.gradle
 /dependency-reduced-pom.xml
+node_modules
+*.tern-port
+package-lock.json

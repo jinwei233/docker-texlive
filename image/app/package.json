@@ -1,3 +1,9 @@
 {
-    "version": "1.0.0"
+  "version": "1.0.0",
+  "dependencies": {
+    "tmp": "0.0.33"
+  },
+  "devDependencies": {
+    "eslint": "^4.11.0"
+  }
 }
