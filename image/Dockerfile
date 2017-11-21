@@ -86,7 +86,8 @@ RUN apt-get install -f -y fonts-arphic-bkai00mp \
     mkdir /usr/share/fonts/external/ &&\
     mkdir /doc/
 
-RUN apt-get install -y emacs wget
+# RUN apt-get install -y emacs
+RUN apt-get install -y wget
 
 RUN wget https://npm.taobao.org/mirrors/node/v8.9.1/node-v8.9.1-linux-x64.tar.gz && \
     tar -C /usr/local --strip-components 1 -xzf node-v8.9.1-linux-x64.tar.gz && \
