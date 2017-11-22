@@ -121,6 +121,8 @@ ADD scripts /bin/
 # 添加 app 目录到 node 项目下
 ADD app /node/
 
-ENTRYPOINT ["/bin/__boot__.sh"]
+# 一定要加 --no-daemon
+# pm2 runs in the foreground and so your docker container continues to run
+CMD ["pm2", "start", "/node/app/app.js", "--no-daemon"]
 
-# CMD ["pm2", "start", "/node/app/app.js"]
+ENTRYPOINT ["/bin/__boot__.sh"]
