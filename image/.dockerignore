@@ -7,3 +7,4 @@ temp?
 */.git*
 */*/.git*
 .git?
+*node_modules

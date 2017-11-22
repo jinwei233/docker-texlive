@@ -87,7 +87,7 @@ RUN apt-get install -f -y fonts-arphic-bkai00mp \
     mkdir /doc/
 
 # RUN apt-get install -y emacs
-RUN apt-get install -y wget
+RUN apt-get install -y wget emacs
 
 RUN wget https://npm.taobao.org/mirrors/node/v8.9.1/node-v8.9.1-linux-x64.tar.gz && \
     tar -C /usr/local --strip-components 1 -xzf node-v8.9.1-linux-x64.tar.gz && \
@@ -97,6 +97,8 @@ ADD app/package.json /node/app/package.json
 
 # 使用淘宝的npm镜像
 RUN npm install --production -d --registry=https://registry.npm.taobao.org
+
+RUN npm install -g pm2 --registry=https://registry.npm.taobao.org
 
 ADD app /node/app
 
@@ -117,6 +119,8 @@ VOLUME ["/doc/", "/usr/share/fonts/external/"]
 ADD scripts /bin/
 
 # 添加 app 目录到 node 项目下
-# ADD app /node/
+ADD app /node/
 
 ENTRYPOINT ["/bin/__boot__.sh"]
+
+# CMD ["pm2", "start", "/node/app/app.js"]
