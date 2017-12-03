@@ -123,6 +123,6 @@ ADD app /node/
 
 # 一定要加 --no-daemon
 # pm2 runs in the foreground and so your docker container continues to run
-CMD ["pm2", "start", "/node/app/app.js", "--no-daemon"]
+# CMD ["pm2", "start", "/node/app/app.js", "--no-daemon"]
 
 ENTRYPOINT ["/bin/__boot__.sh"]
