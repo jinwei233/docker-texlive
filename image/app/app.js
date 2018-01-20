@@ -4,7 +4,7 @@ const url = require('url');
 const {
   readFile,
   formula
-} = require('./lib/pdflatex');
+} = require('./lib');
 
 http.createServer(async function(req, res){
   const request = url.parse(req.url, true);
@@ -17,9 +17,9 @@ http.createServer(async function(req, res){
     // console.log(e.message);
     // console.log('=====');
     // res.setHeader("Latex-Error", new Buffer(e).toString('base64'));
-    res.setHeader("Latex-Error", e);
+    // res.setHeader("Latex-Error", e);
     resp = await readFile('./img/error.png');
   }
-  res.writeHead(200, {'Content-Type': 'image/png' });
+  res.writeHead(200, {'Content-Type': 'image/svg+xml' });
   res.end(resp, 'binary');
 }).listen(8002, '0.0.0.0');

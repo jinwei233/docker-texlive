@@ -3,6 +3,7 @@
 
 # 本地调试
 - docker run -p 8002:8002 -v $(pwd):/doc/ -t -i latex
+- http://localhost:8002/?f=a
 
 # 本地 Daemon 运行
 - docker run -d -p 8002:8002 -t -i latex

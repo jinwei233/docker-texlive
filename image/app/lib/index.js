@@ -55,28 +55,42 @@ function exec(cmd, options = {}) {
   });
 }
 
-function createCommand() {
+function todvi(dir) {
   return [
-    'pdflatex',
-    '-shell-escape',
+    'latex',
+    // '-shell-escape',
     '-halt-on-error',
-    '-interaction=nonstopmode',
-    'texput.tex'
+    // '-interaction=nonstopmode',
+    `${dir}/texput.tex`,
+  ].join(' ');
+}
+
+function tosvg(dir) {
+  return [
+    'dvisvgm',
+    '--exact',
+    '--no-fonts',
+    `${dir}/texput.dvi`,
+    '-o',
+    `${dir}/texput.svg`,
   ].join(' ');
 }
 
 async function compile(tempPath, options = {}) {
   try {
-    const cmd = createCommand();
-    await exec(cmd, {
+    await exec(todvi(tempPath), {
       ...options,
       cwd: tempPath,
       env: process.env,
       timeout: 1000,
     });
-    return readFile(Path.join(tempPath, 'texput.png')).then(data => {
-      // 移除临时目录
-      // TODO 有没有更加有效的方式，不开启 shell
+    await exec(tosvg(tempPath), {
+      ...options,
+      cwd: tempPath,
+      env: process.env,
+      timeout: 1000,
+    });
+    return readFile(Path.join(tempPath, 'texput.svg')).then(data => {
       exec('rm -r ' + tempPath);
       return data;
     });
@@ -85,15 +99,16 @@ async function compile(tempPath, options = {}) {
   }
 }
 
-async function pdflatex(source, options = {}) {
+async function latex(source, options = {}) {
   const tmpPath = await createTmpDir();
+  console.log(`tempPath = ${tmpPath}`);
   await writeFile(Path.join(tmpPath, 'texput.tex'), source);
   return compile(tmpPath, options);
 }
 
 async function formula(eq) {
-  return await pdflatex(`
-\\documentclass[convert={density=600,outext=.png}]{standalone}
+  return await latex(`
+\\documentclass{standalone}
 \\begin{document}
 $ ${eq} $
 \\end{document}
@@ -103,7 +118,7 @@ $ ${eq} $
 exports.readFile = readFile;
 exports.formula = formula;
 
-// execAsync('pdflatex -interaction=nonstopmode -shell-escape texput.tex', {
+// execAsync('latex -interaction=nonstopmode -shell-escape texput.tex', {
 //     cwd: '/tmp/tmp-187HjL2mVfd6KBl',
 //     timeout: 200,
 // }, function(err, stdout, stderr) {
