@@ -19,7 +19,6 @@
 - docker push ccr.ccs.tencentyun.com/micro_service_latex/tex2png:v1.0.0 # 需要在 qcloud 中创建服务后，得到 push 的地址
 
 # 笔记
-- 直接生成 png 文件需要调用 pdflatex
-- pdflatex --shell-escape example.tex
-- latex 006.tex # 会生成一个 dvi 文件
-- dvisvgm --no-fonts 006.dvi # 转成 svg 文件。不能用 imagemagic 转
+- 直接生成 png 文件需要调用 pdflatex: pdflatex --shell-escape example.tex
+- latex -halt-on-error 006.tex # 会生成一个 dvi 文件 注：加了--shell-escape，此选项失效
+- dvisvgm --exact --no-fonts 006.dvi # 转成 svg 文件 不要用 imagemagic convert
