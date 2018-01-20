@@ -107,12 +107,13 @@ async function latex(source, options = {}) {
 }
 
 async function formula(eq) {
-  return await latex(`
+  const filecontent = `
 \\documentclass{standalone}
 \\begin{document}
-$ ${eq} $
+${eq}
 \\end{document}
-`);
+`;
+  return await latex(filecontent);
 }
 
 exports.readFile = readFile;
